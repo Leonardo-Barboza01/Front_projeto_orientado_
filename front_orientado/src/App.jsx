@@ -40,8 +40,9 @@ export default function App() {
 
   async function apagarFuncionarios() {
     const id = 'd5c192dc-4bea-4282-9be4-ca52161f34c1'
-    const resposta = await apiLocal.delete()
+    const resposta = await apiLocal.delete(`/apagarFuncionarios/${id}`)
   }
+  // - aspas=string / aspas_invertida``= atribuir dados,sendo o $ que chama os dados
 
   //d5c192dc-4bea-4282-9be4-ca52161f34c1g
 
