@@ -39,12 +39,21 @@ export default function App() {
   }
 
   async function apagarFuncionarios() {
-    const id = 'd5c192dc-4bea-4282-9be4-ca52161f34c1'
-    const resposta = await apiLocal.delete(`/apagarFuncionarios/${id}`)
+    try {
+      const id = 'b2c52aa9-38dd-441e-bd1e-ceeb295893e8'
+    const resposta = await apiLocal.delete(`/ApagarFuncionarios/${id}`)
+    console.log(resposta.data.dados)
+    } catch (erro) {
+      console.log("Erro ao consultar registro")
+    }
+
+
+    
   }
   // - aspas=string / aspas_invertida``= atribuir dados,sendo o $ que chama os dados
 
   //d5c192dc-4bea-4282-9be4-ca52161f34c1g
+
 
 
   return (
@@ -60,6 +69,8 @@ export default function App() {
 
   )
 }
+
+//react-toastify
 
 
 
