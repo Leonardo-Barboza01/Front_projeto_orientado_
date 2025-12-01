@@ -1,15 +1,21 @@
-import './App.css'
+import React, { useState } from 'react'
 import apiLocal from './Api/apiLocal'
-
+import './App.css'
 
 export default function App() {
+
+  const [ dadosFuncionarios, setDadosFuncionarios] = useState(['']) 
+  console.log( dadosFuncionarios )
+      
+   
 
   async function consultaFuncionarios() {
    try {
      const resposta = await apiLocal.get('/VisualizarFuncionarios')
-    console.log(resposta.data)
+    //console.log(resposta.data)
+    setDadosFuncionarios(resposta.data)
    } catch (err) {
-    console.log(err.response)
+    console.log(err.response.data.error)
    }
   }
 
@@ -65,6 +71,23 @@ export default function App() {
           <button onClick={cadastrarFuncionarios} >Cadastrar</button>
         </center>
       </div>
+
+        <div> 
+          {dadosFuncionarios.map((item) => {
+            return(
+              <div>
+                
+                <p> Nome:  {item.nome} </p>
+                <p> Email: {item.email} </p>
+                <p> CPF:   {item.cpf} </p>
+                <p> Status: {item.status === true ? <span> Ativo </span> : <span> Inativo </span>} </p> 
+                <p> Hierarquia:  </p>
+              </div>
+             )
+          })} 
+
+          
+        </div>
     </>
 
   )
