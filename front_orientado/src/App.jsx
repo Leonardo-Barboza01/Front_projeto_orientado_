@@ -11,7 +11,7 @@ export default function App() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
 
-  console.log(dadosFuncionarios)
+  //console.log(dadosFuncionarios)
 
   async function consultarFuncionarios() {
     try {
@@ -26,6 +26,7 @@ export default function App() {
 
   async function cadastrarFuncionarios(e) {
     e.preventDefault()
+    
     const idHierarquia = '93c79849-54da-4d3c-af7a-aa3bc3c180b5'
     try {
       const resposta = await apiLocal.post('/CadastrarFuncionarios', {
@@ -53,15 +54,17 @@ export default function App() {
       console.log(err.response.data.error)
     }
   }
-
+// === Será quando será igual mais do que igual
   return (
     <>
+    
       <div className='appGeral'>
         <div className='appBotoes'>
           <button onClick={cadastrarFuncionarios}>Cadastrar</button>
           <button onClick={consultarFuncionarios}>Consultar</button>
           <button onClick={apagarFuncionarios}>Apagar</button>
         </div>
+        
         {existeDados === false ? <span><h1>Sem Dados</h1></span> :
           <div className='tabelaGeral'>
             <table className='dadosTabelas'>
