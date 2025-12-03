@@ -1,104 +1,127 @@
 import React, { useState } from 'react'
 import apiLocal from './Api/apiLocal'
-import './App.css'
+import './App.scss'
 
 export default function App() {
 
-  const [ dadosFuncionarios, setDadosFuncionarios] = useState(['']) 
-  console.log( dadosFuncionarios )
-      
-   
+  const [dadosFuncionarios, setDadosFuncionarios] = useState([''])
+  const [existeDados, setExisteDados] = useState(false)
+  const [nome, setNome] = useState('')
+  const [cpf, setCpf] = useState('')
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
 
-  async function consultaFuncionarios() {
-   try {
-     const resposta = await apiLocal.get('/VisualizarFuncionarios')
-    //console.log(resposta.data)
-    setDadosFuncionarios(resposta.data)
-   } catch (err) {
-    console.log(err.response.data.error)
-   }
+  console.log(dadosFuncionarios)
+
+  async function consultarFuncionarios() {
+    try {
+      const resposta = await apiLocal.get('/VisualizarFuncionarios')
+      //console.log(resposta.data)
+      setDadosFuncionarios(resposta.data)
+      setExisteDados(true)
+    } catch (err) {
+      console.log(err.response.data.error)
+    }
   }
 
-  async function cadastrarFuncionarios() {
-    //try catch - proteção do site, ao passar informações de facil compreensão
+  async function cadastrarFuncionarios(e) {
+    e.preventDefault()
+    const idHierarquia = '93c79849-54da-4d3c-af7a-aa3bc3c180b5'
     try {
-      const cpf = '111111111'
-      const idHierarquia = 'd5c192dc-4bea-4282-9be4-ca52161f34c1'
-      const nome = 'leonardo'
-      const email = 'leonardo@teste.co.br'
-      const senha = '12345'
-      const status = true
-
       const resposta = await apiLocal.post('/CadastrarFuncionarios', {
         nome,
         cpf,
         email,
         senha,
-        status,
         idHierarquia
       })
+      setNome('')
+      setCpf('')
+      setEmail('')
+      setSenha('')
       console.log(resposta.data.dados)
     } catch (err) {
-        console.log(err.response.data.error)
+      console.log(err.response.data.error)
     }
-
   }
 
-  async function apagarFuncionarios() {
+  async function apagarFuncionarios(id) {
     try {
-      const id = 'b2c52aa9-38dd-441e-bd1e-ceeb295893e8'
-    const resposta = await apiLocal.delete(`/ApagarFuncionarios/${id}`)
-    console.log(resposta.data.dados)
-    } catch (erro) {
-      console.log("Erro ao consultar registro")
+      const resposta = await apiLocal.delete(`/ApagarFuncionarios/${id}`)
+      console.log(resposta.data.dados)
+    } catch (err) {
+      console.log(err.response.data.error)
     }
-
-
-    
   }
-  // - aspas=string / aspas_invertida``= atribuir dados,sendo o $ que chama os dados
-
-  //d5c192dc-4bea-4282-9be4-ca52161f34c1g
-
-
 
   return (
     <>
-      <div>
-        <center>
-          <button onClick={apagarFuncionarios}    >Apagar</button>
-          <button onClick={consultaFuncionarios}  >Consultar</button>
-          <button onClick={cadastrarFuncionarios} >Cadastrar</button>
-        </center>
-      </div>
-
-        <div> 
-          {dadosFuncionarios.map((item) => {
-            return(
-              <div>
-                
-                <p> Nome:  {item.nome} </p>
-                <p> Email: {item.email} </p>
-                <p> CPF:   {item.cpf} </p>
-                <p> Status: {item.status === true ? <span> Ativo </span> : <span> Inativo </span>} </p> 
-                <p> Hierarquia:  </p>
-              </div>
-             )
-          })} 
-
-          
+      <div className='appGeral'>
+        <div className='appBotoes'>
+          <button onClick={cadastrarFuncionarios}>Cadastrar</button>
+          <button onClick={consultarFuncionarios}>Consultar</button>
+          <button onClick={apagarFuncionarios}>Apagar</button>
         </div>
+        {existeDados === false ? <span><h1>Sem Dados</h1></span> :
+          <div className='tabelaGeral'>
+            <table className='dadosTabelas'>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>CPF</th>
+                  <th>Hierarquia</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+                {dadosFuncionarios.map((item) => {
+                  return (
+                    <tr>
+                      <td>{item.nome}</td>
+                      <td>{item.email}</td>
+                      <td>{item.cpf}</td>
+                      <td></td>
+                      <td>{item.status === true ? <span>Ativo</span> : <span>Inativo</span>}</td>
+                      <td><button className='button1'>Editar</button> - <button className='button2' onClick={() => apagarFuncionarios(item.id)} >Apagar</button></td>
+                    </tr>
+                  )
+                })}
+              </thead>
+            </table>
+          </div>
+        }
+        <div className='appFormulario'>
+          <h1>Formulario de Cadastro</h1>
+          <form>
+            <input
+              type="text"
+              placeholder='Digite Seu Nome'
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder='Digite Seu CPF'
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder='Digite Seu E-Mail '
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder='Digite sua Senha'
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </form>
+        </div>
+      </div>
     </>
-
   )
 }
-
-//react-toastify
-
-
-
-
-
-
 
 
